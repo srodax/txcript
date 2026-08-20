@@ -1,14 +1,14 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/wordmark-dark.svg">
-    <img src="docs/assets/wordmark-light.svg" alt="txcript" width="600">
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/wordmark-dark.svg">
+    <img src="../assets/wordmark-light.svg" alt="txcript" width="600">
   </picture>
 </p>
 
 <p align="center">一個在 harness 之間搬移工作階段的函式庫</p>
 
 <p align="center">
-  <a href="README.md">English</a> | <a href="README.ja.md">日本語</a> | <a href="README.zh-CN.md">简体中文</a> | 繁體中文 | <a href="README.ko.md">한국어</a> | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | <a href="README.pt-BR.md">Português (Brasil)</a> | <a href="README.ru.md">Русский</a> | <a href="README.mr.md">मराठी</a> | <a href="README.ta.md">தமிழ்</a>
+  <a href="../../README.md">English</a> | <a href="README.ja.md">日本語</a> | <a href="README.zh-CN.md">简体中文</a> | 繁體中文 | <a href="README.ko.md">한국어</a> | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | <a href="README.pt-BR.md">Português (Brasil)</a> | <a href="README.ru.md">Русский</a> | <a href="README.mr.md">मराठी</a> | <a href="README.ta.md">தமிழ்</a>
 </p>
 
 <p align="center">
@@ -16,11 +16,11 @@
   <a href="https://www.npmjs.com/package/txcript"><img src="https://img.shields.io/npm/v/txcript?logo=npm&color=4c71f2" alt="npm"></a>
   <a href="https://docs.rs/txcript"><img src="https://img.shields.io/docsrs/txcript?logo=docsdotrs" alt="docs.rs"></a>
   <a href="https://github.com/skillsynchq/txcript/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/skillsynchq/txcript/ci.yml?branch=main&logo=github&label=ci" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
 </p>
 
 <p align="center">
-  <a href="https://claude.com/claude-code"><img src="docs/assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
+  <a href="https://claude.com/claude-code"><img src="../assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://github.com/openai/codex"><img src="https://github.com/openai.png?size=160" alt="Codex" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -40,7 +40,7 @@
 在 Claude Code 中開始一個工作階段，碰到用量上限或卡關時，改用 Codex 接著做 — 完整的對話、推理與工具歷史通通保留：
 
 <p align="center">
-  <img src="docs/assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
+  <img src="../assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
 </p>
 
 txcript 透過一個具型別的共同模型來對應各個 harness 的原生紀錄格式。原生載入/儲存可做到位元組層級無損；跨 harness 轉換會在可用時保留訊息、推理、工具呼叫、工具結果、圖片、中繼資料與用量資訊。它以 [**CLI**](#cli)、[**Rust crate**](#rust-crate) 與 [**npm 套件**](#npm-套件) 形式發佈。
@@ -52,7 +52,7 @@ txcript 透過一個具型別的共同模型來對應各個 harness 的原生紀
 - **隨處接續** — `txcript continue <id> --with <harness>` 會把工作階段改寫為另一個 harness 的原生格式並啟動它。原始工作階段絕不會被更動。
 - **搜尋一切** — 對本機上的所有工作階段做模糊/子字串搜尋（fzf 風格語法，由 [nucleo](https://github.com/helix-editor/nucleo) 驅動），可作為函式庫 API、單次 CLI 查詢或互動式選擇器使用。
 - **MCP 伺服器** — `txcript mcp` 提供唯讀的 `list_sessions`、`search_sessions` 與 `read_session` 工具，讓 agent 能把過往的工作階段當作上下文來挖掘。
-- **格式文件完備** — 每個 harness 的磁碟格式都寫在 [`docs/formats/`](docs/formats)，且每項主張都註明出處（官方文件、原始碼 permalink 或逆向工程筆記）。
+- **格式文件完備** — 每個 harness 的磁碟格式都寫在 [`docs/formats/`](../formats)，且每項主張都註明出處（官方文件、原始碼 permalink 或逆向工程筆記）。
 
 ## 支援的 harness
 
@@ -74,16 +74,16 @@ flowchart LR
 
 | Harness | id | 磁碟上的工作階段 | 原生格式 | 轉換 | 可接續至 | 文件 |
 |---|---|---|---|:---:|:---:|---|
-| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [規格](docs/formats/claude-code.md) |
-| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | rollout JSONL | ⇄ | ✓ | [規格](docs/formats/codex.md) |
-| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [規格](docs/formats/opencode.md) |
-| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [規格](docs/formats/pi.md) |
-| [Campfire](docs/formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [規格](docs/formats/campfire.md) |
-| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [規格](docs/formats/cursor.md) |
+| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [規格](../formats/claude-code.md) |
+| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | rollout JSONL | ⇄ | ✓ | [規格](../formats/codex.md) |
+| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [規格](../formats/opencode.md) |
+| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [規格](../formats/pi.md) |
+| [Campfire](../formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [規格](../formats/campfire.md) |
+| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [規格](../formats/cursor.md) |
 | [Cursor desktop](https://cursor.com) | `cursor_desktop` | `<Cursor User dir>/globalStorage/` | SQLite | ⇄ | ✓ | — |
-| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | JSON 工作階段目錄 | ⇄ | ✓ | [規格](docs/formats/grok.md) |
-| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | 對話串 JSON | → | — <sup>1</sup> | [規格](docs/formats/amp.md) |
-| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [規格](docs/formats/antigravity.md) |
+| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | JSON 工作階段目錄 | ⇄ | ✓ | [規格](../formats/grok.md) |
+| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | 對話串 JSON | → | — <sup>1</sup> | [規格](../formats/amp.md) |
+| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [規格](../formats/antigravity.md) |
 
 <sup>1</sup> Amp 的對話串保存在伺服器端，且 CLI 沒有匯入功能：工作階段可以*從* Amp 轉換，但無法接續至 Amp。
 
@@ -289,7 +289,7 @@ bun run build        # produces ./pkg
 
 ## 格式文件
 
-這些紀錄格式並非都有官方文件。[`docs/formats/`](docs/formats) 為每個 harness 提供一份文件，內容涵蓋工作階段在磁碟上的位置、探索機制如何找到它們、對格式各部分的逐一剖析及其特殊之處，且每項主張都標註了出處：官方文件、harness 自身的開源序列化程式碼（附有釘選到特定 commit 的 permalink），或逆向工程。
+這些紀錄格式並非都有官方文件。[`docs/formats/`](../formats) 為每個 harness 提供一份文件，內容涵蓋工作階段在磁碟上的位置、探索機制如何找到它們、對格式各部分的逐一剖析及其特殊之處，且每項主張都標註了出處：官方文件、harness 自身的開源序列化程式碼（附有釘選到特定 commit 的 permalink），或逆向工程。
 
 ## 開發
 
@@ -303,4 +303,4 @@ bun run build && bun examples/convert.ts <file> <from> <to>
 
 ## 授權條款
 
-[Apache-2.0](LICENSE)
+[Apache-2.0](../../LICENSE)

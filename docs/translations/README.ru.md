@@ -1,14 +1,14 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/wordmark-dark.svg">
-    <img src="docs/assets/wordmark-light.svg" alt="txcript" width="600">
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/wordmark-dark.svg">
+    <img src="../assets/wordmark-light.svg" alt="txcript" width="600">
   </picture>
 </p>
 
 <p align="center">Библиотека для переноса сессий между харнессами</p>
 
 <p align="center">
-  <a href="README.md">English</a> | <a href="README.ja.md">日本語</a> | <a href="README.zh-CN.md">简体中文</a> | <a href="README.zh-TW.md">繁體中文</a> | <a href="README.ko.md">한국어</a> | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | <a href="README.pt-BR.md">Português (Brasil)</a> | Русский | <a href="README.mr.md">मराठी</a> | <a href="README.ta.md">தமிழ்</a>
+  <a href="../../README.md">English</a> | <a href="README.ja.md">日本語</a> | <a href="README.zh-CN.md">简体中文</a> | <a href="README.zh-TW.md">繁體中文</a> | <a href="README.ko.md">한국어</a> | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | <a href="README.pt-BR.md">Português (Brasil)</a> | Русский | <a href="README.mr.md">मराठी</a> | <a href="README.ta.md">தமிழ்</a>
 </p>
 
 <p align="center">
@@ -16,11 +16,11 @@
   <a href="https://www.npmjs.com/package/txcript"><img src="https://img.shields.io/npm/v/txcript?logo=npm&color=4c71f2" alt="npm"></a>
   <a href="https://docs.rs/txcript"><img src="https://img.shields.io/docsrs/txcript?logo=docsdotrs" alt="docs.rs"></a>
   <a href="https://github.com/skillsynchq/txcript/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/skillsynchq/txcript/ci.yml?branch=main&logo=github&label=ci" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
 </p>
 
 <p align="center">
-  <a href="https://claude.com/claude-code"><img src="docs/assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
+  <a href="https://claude.com/claude-code"><img src="../assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://github.com/openai/codex"><img src="https://github.com/openai.png?size=160" alt="Codex" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -40,7 +40,7 @@
 Начните сессию в Claude Code, упритесь в лимит использования или в тупик, и продолжите её в Codex с полной историей разговора, рассуждений и вызовов инструментов:
 
 <p align="center">
-  <img src="docs/assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
+  <img src="../assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
 </p>
 
 txcript отображает нативный формат транскрипта каждого харнесса через типизированную общую модель. Нативные загрузка и сохранение побайтово точны, без потерь; конвертация между харнессами сохраняет сообщения, рассуждения, вызовы инструментов, их результаты, изображения, метаданные и данные об использовании, где они доступны. Проект поставляется как [**CLI**](#cli), [**Rust-крейт**](#rust-крейт) и [**npm-пакет**](#npm-пакет).
@@ -52,7 +52,7 @@ txcript отображает нативный формат транскрипт�
 - **Продолжайте где угодно** — `txcript continue <id> --with <harness>` переписывает сессию в нативный формат другого харнесса и запускает его. Оригинал никогда не изменяется.
 - **Поиск по всему** — нечёткий/подстроковый поиск по всем сессиям на машине (синтаксис в стиле fzf, на основе [nucleo](https://github.com/helix-editor/nucleo)), как библиотечный API, разовый запрос из CLI или интерактивный picker.
 - **MCP-сервер** — `txcript mcp` предоставляет read-only-инструменты `list_sessions`, `search_sessions` и `read_session`, так что агенты могут использовать прошлые сессии как контекст.
-- **Задокументированные форматы** — формат хранения каждого харнесса описан в [`docs/formats/`](docs/formats), с указанием источника каждого утверждения (официальная документация, permalink'и на исходный код или заметки по реверс-инжинирингу).
+- **Задокументированные форматы** — формат хранения каждого харнесса описан в [`docs/formats/`](../formats), с указанием источника каждого утверждения (официальная документация, permalink'и на исходный код или заметки по реверс-инжинирингу).
 
 ## Поддерживаемые харнессы
 
@@ -74,16 +74,16 @@ flowchart LR
 
 | Harness | id | Сессии на диске | Нативный формат | Конвертация | Продолжение в | Док. |
 |---|---|---|---|:---:|:---:|---|
-| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [спецификация](docs/formats/claude-code.md) |
-| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | rollout JSONL | ⇄ | ✓ | [спецификация](docs/formats/codex.md) |
-| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [спецификация](docs/formats/opencode.md) |
-| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [спецификация](docs/formats/pi.md) |
-| [Campfire](docs/formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [спецификация](docs/formats/campfire.md) |
-| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [спецификация](docs/formats/cursor.md) |
+| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [спецификация](../formats/claude-code.md) |
+| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | rollout JSONL | ⇄ | ✓ | [спецификация](../formats/codex.md) |
+| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [спецификация](../formats/opencode.md) |
+| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [спецификация](../formats/pi.md) |
+| [Campfire](../formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [спецификация](../formats/campfire.md) |
+| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [спецификация](../formats/cursor.md) |
 | [Cursor desktop](https://cursor.com) | `cursor_desktop` | `<Cursor User dir>/globalStorage/` | SQLite | ⇄ | ✓ | — |
-| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | каталог сессии (JSON) | ⇄ | ✓ | [спецификация](docs/formats/grok.md) |
-| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | JSON треда | → | — <sup>1</sup> | [спецификация](docs/formats/amp.md) |
-| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [спецификация](docs/formats/antigravity.md) |
+| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | каталог сессии (JSON) | ⇄ | ✓ | [спецификация](../formats/grok.md) |
+| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | JSON треда | → | — <sup>1</sup> | [спецификация](../formats/amp.md) |
+| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [спецификация](../formats/antigravity.md) |
 
 <sup>1</sup> Треды Amp хранятся на сервере, а у CLI нет импорта: сессии конвертируются *из* Amp, но продолжить их в нём нельзя.
 
@@ -289,7 +289,7 @@ bun run build        # produces ./pkg
 
 ## Документация форматов
 
-Не все эти форматы транскриптов задокументированы их разработчиками. В [`docs/formats/`](docs/formats) есть один документ на каждый харнесс, где описано, где сессии лежат на диске, как их находит механизм обнаружения, разбор каждой части формата и его особенности, и каждое утверждение снабжено указанием источника: официальная документация, собственный открытый код сериализации харнесса (со ссылками, закреплёнными за коммитом) или реверс-инжиниринг.
+Не все эти форматы транскриптов задокументированы их разработчиками. В [`docs/formats/`](../formats) есть один документ на каждый харнесс, где описано, где сессии лежат на диске, как их находит механизм обнаружения, разбор каждой части формата и его особенности, и каждое утверждение снабжено указанием источника: официальная документация, собственный открытый код сериализации харнесса (со ссылками, закреплёнными за коммитом) или реверс-инжиниринг.
 
 ## Разработка
 
@@ -303,4 +303,4 @@ bun run build && bun examples/convert.ts <file> <from> <to>
 
 ## Лицензия
 
-[Apache-2.0](LICENSE)
+[Apache-2.0](../../LICENSE)

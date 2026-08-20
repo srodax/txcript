@@ -1,14 +1,14 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/wordmark-dark.svg">
-    <img src="docs/assets/wordmark-light.svg" alt="txcript" width="600">
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/wordmark-dark.svg">
+    <img src="../assets/wordmark-light.svg" alt="txcript" width="600">
   </picture>
 </p>
 
 <p align="center">Uma biblioteca para mover sessões entre harnesses</p>
 
 <p align="center">
-  <a href="README.md">English</a> | <a href="README.ja.md">日本語</a> | <a href="README.zh-CN.md">简体中文</a> | <a href="README.zh-TW.md">繁體中文</a> | <a href="README.ko.md">한국어</a> | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | Português (Brasil) | <a href="README.ru.md">Русский</a> | <a href="README.mr.md">मराठी</a> | <a href="README.ta.md">தமிழ்</a>
+  <a href="../../README.md">English</a> | <a href="README.ja.md">日本語</a> | <a href="README.zh-CN.md">简体中文</a> | <a href="README.zh-TW.md">繁體中文</a> | <a href="README.ko.md">한국어</a> | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | Português (Brasil) | <a href="README.ru.md">Русский</a> | <a href="README.mr.md">मराठी</a> | <a href="README.ta.md">தமிழ்</a>
 </p>
 
 <p align="center">
@@ -16,11 +16,11 @@
   <a href="https://www.npmjs.com/package/txcript"><img src="https://img.shields.io/npm/v/txcript?logo=npm&color=4c71f2" alt="npm"></a>
   <a href="https://docs.rs/txcript"><img src="https://img.shields.io/docsrs/txcript?logo=docsdotrs" alt="docs.rs"></a>
   <a href="https://github.com/skillsynchq/txcript/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/skillsynchq/txcript/ci.yml?branch=main&logo=github&label=ci" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
 </p>
 
 <p align="center">
-  <a href="https://claude.com/claude-code"><img src="docs/assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
+  <a href="https://claude.com/claude-code"><img src="../assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://github.com/openai/codex"><img src="https://github.com/openai.png?size=160" alt="Codex" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -40,7 +40,7 @@
 Comece uma sessão no Claude Code, atinja um limite de uso ou um beco sem saída, e retome-a no Codex com toda a conversa, o raciocínio e o histórico de ferramentas intactos:
 
 <p align="center">
-  <img src="docs/assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
+  <img src="../assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
 </p>
 
 O txcript mapeia o formato de transcrição nativo de cada harness por meio de um modelo comum tipado. Carregar/salvar nativo é lossless byte a byte; a conversão entre harnesses preserva mensagens, raciocínio, chamadas de ferramentas, resultados de ferramentas, imagens, metadados e dados de uso, quando disponíveis. É distribuído como [**CLI**](#cli), [**crate Rust**](#crate-rust) e [**pacote npm**](#pacote-npm).
@@ -52,7 +52,7 @@ O txcript mapeia o formato de transcrição nativo de cada harness por meio de u
 - **Continue em qualquer lugar**: `txcript continue <id> --with <harness>` reescreve uma sessão no formato nativo de outro harness e o inicia. O original nunca é modificado.
 - **Pesquise tudo**: busca fuzzy/por substring em todas as sessões da máquina (sintaxe no estilo fzf, com [nucleo](https://github.com/helix-editor/nucleo) por baixo), como API de biblioteca, consulta única na CLI ou seletor interativo.
 - **Servidor MCP**: `txcript mcp` expõe as ferramentas somente leitura `list_sessions`, `search_sessions` e `read_session`, para que agentes possam explorar sessões passadas como contexto.
-- **Formatos documentados**: o formato em disco de cada harness está descrito em [`docs/formats/`](docs/formats), com a proveniência de cada afirmação (documentação oficial, permalinks para o código-fonte ou notas de engenharia reversa).
+- **Formatos documentados**: o formato em disco de cada harness está descrito em [`docs/formats/`](../formats), com a proveniência de cada afirmação (documentação oficial, permalinks para o código-fonte ou notas de engenharia reversa).
 
 ## Harnesses suportados
 
@@ -74,16 +74,16 @@ Descoberta, listagem, pesquisa, `view` e round-trips nativos funcionam para todo
 
 | Harness | id | Sessões em disco | Formato nativo | Conversão | Continuar para | Doc |
 |---|---|---|---|:---:|:---:|---|
-| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [spec](docs/formats/claude-code.md) |
-| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | JSONL de rollout | ⇄ | ✓ | [spec](docs/formats/codex.md) |
-| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [spec](docs/formats/opencode.md) |
-| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [spec](docs/formats/pi.md) |
-| [Campfire](docs/formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [spec](docs/formats/campfire.md) |
-| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [spec](docs/formats/cursor.md) |
+| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [spec](../formats/claude-code.md) |
+| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | JSONL de rollout | ⇄ | ✓ | [spec](../formats/codex.md) |
+| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [spec](../formats/opencode.md) |
+| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [spec](../formats/pi.md) |
+| [Campfire](../formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [spec](../formats/campfire.md) |
+| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [spec](../formats/cursor.md) |
 | [Cursor desktop](https://cursor.com) | `cursor_desktop` | `<Cursor User dir>/globalStorage/` | SQLite | ⇄ | ✓ | — |
-| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | diretório de sessão (JSON) | ⇄ | ✓ | [spec](docs/formats/grok.md) |
-| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | JSON da thread | → | — <sup>1</sup> | [spec](docs/formats/amp.md) |
-| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [spec](docs/formats/antigravity.md) |
+| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | diretório de sessão (JSON) | ⇄ | ✓ | [spec](../formats/grok.md) |
+| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | JSON da thread | → | — <sup>1</sup> | [spec](../formats/amp.md) |
+| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [spec](../formats/antigravity.md) |
 
 <sup>1</sup> As threads do Amp ficam no servidor e a CLI não tem importação: as sessões convertem *a partir do* Amp, mas não podem ser continuadas para ele.
 
@@ -289,7 +289,7 @@ bun run build        # produces ./pkg
 
 ## Documentação dos formatos
 
-Nem todos esses formatos de transcrição são documentados por seus fornecedores. [`docs/formats/`](docs/formats) tem um documento por harness cobrindo onde as sessões ficam em disco, como a descoberta as encontra, uma dissecação de cada parte do formato e suas peculiaridades, cada um marcado com a proveniência do que afirma: documentação oficial, o próprio código de serialização open source do harness (citado com permalinks fixados em commits), ou engenharia reversa.
+Nem todos esses formatos de transcrição são documentados por seus fornecedores. [`docs/formats/`](../formats) tem um documento por harness cobrindo onde as sessões ficam em disco, como a descoberta as encontra, uma dissecação de cada parte do formato e suas peculiaridades, cada um marcado com a proveniência do que afirma: documentação oficial, o próprio código de serialização open source do harness (citado com permalinks fixados em commits), ou engenharia reversa.
 
 ## Desenvolvimento
 
@@ -303,4 +303,4 @@ O binário vive em seu próprio crate de workspace (`cli/`, pacote `txcript-cli`
 
 ## Licença
 
-[Apache-2.0](LICENSE)
+[Apache-2.0](../../LICENSE)

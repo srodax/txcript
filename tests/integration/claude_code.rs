@@ -275,6 +275,61 @@ fn codec_fixpoint_through_common_loses_nothing() {
     assert_eq!(common, back);
 }
 
+/// Foreign harnesses put block tags in `tool_result.content` that the
+/// Anthropic wire rejects (e.g. `knowledge`); passing one through verbatim
+/// makes the converted session fail to load with a 400 on resume. Only the
+/// wire's own tags may survive as an array — anything else flattens to its
+/// compact JSON text. (Regression: simple → `claude_code` with a `knowledge`
+/// block.)
+#[test]
+fn foreign_tool_result_blocks_flatten_to_text() {
+    let mut common = sample_common();
+    common.body[1].content.push(common::Block::ToolUse {
+        id: "t2".into(),
+        tool: common::Tool::Raw {
+            tool_name: "Recall".into(),
+            input: json!({ "q": "fact" }),
+        },
+    });
+    common.body[2].content = vec![
+        common::Block::ToolResult {
+            tool_use_id: "t1".into(),
+            content: common::ToolOutput::Json(json!([
+                { "type": "knowledge", "id": "k1", "content": "remembered fact" },
+                { "type": "text", "text": "ok" },
+            ])),
+            is_error: false,
+        },
+        common::Block::ToolResult {
+            tool_use_id: "t2".into(),
+            content: common::ToolOutput::Json(json!([
+                { "type": "text", "text": "native shape" },
+            ])),
+            is_error: false,
+        },
+    ];
+
+    let native = claude_code::ClaudeCode::from_common(&common).unwrap();
+    let text = claude_code::ClaudeCode::to_text(&native).unwrap();
+    let contents: Vec<serde_json::Value> = text
+        .lines()
+        .filter_map(|line| serde_json::from_str::<serde_json::Value>(line).ok())
+        .filter_map(|entry| entry.get("message")?.get("content").cloned())
+        .flat_map(|content| content.as_array().cloned().unwrap_or_default())
+        .filter_map(|block| {
+            (block.get("type")? == "tool_result").then(|| block.get("content").cloned())?
+        })
+        .collect();
+    assert_eq!(contents.len(), 2, "both tool results should be emitted");
+    // The foreign-tagged array flattens to a string…
+    assert!(contents[0].is_string(), "got {:?}", contents[0]);
+    // …while the wire's native block-array shape passes through untouched.
+    assert_eq!(
+        contents[1],
+        json!([{ "type": "text", "text": "native shape" }])
+    );
+}
+
 /// `from_common` is a pure function: same input, identical output (deterministic
 /// uuids), so conversions are reproducible.
 #[test]

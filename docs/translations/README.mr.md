@@ -1,14 +1,14 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/wordmark-dark.svg">
-    <img src="docs/assets/wordmark-light.svg" alt="txcript" width="600">
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/wordmark-dark.svg">
+    <img src="../assets/wordmark-light.svg" alt="txcript" width="600">
   </picture>
 </p>
 
 <p align="center">हार्नेसमधील सेशन्स हलवण्यासाठीची लायब्ररी</p>
 
 <p align="center">
-  <a href="README.md">English</a> | <a href="README.ja.md">日本語</a> | <a href="README.zh-CN.md">简体中文</a> | <a href="README.zh-TW.md">繁體中文</a> | <a href="README.ko.md">한국어</a> | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | <a href="README.pt-BR.md">Português (Brasil)</a> | <a href="README.ru.md">Русский</a> | मराठी | <a href="README.ta.md">தமிழ்</a>
+  <a href="../../README.md">English</a> | <a href="README.ja.md">日本語</a> | <a href="README.zh-CN.md">简体中文</a> | <a href="README.zh-TW.md">繁體中文</a> | <a href="README.ko.md">한국어</a> | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | <a href="README.pt-BR.md">Português (Brasil)</a> | <a href="README.ru.md">Русский</a> | मराठी | <a href="README.ta.md">தமிழ்</a>
 </p>
 
 <p align="center">
@@ -16,11 +16,11 @@
   <a href="https://www.npmjs.com/package/txcript"><img src="https://img.shields.io/npm/v/txcript?logo=npm&color=4c71f2" alt="npm"></a>
   <a href="https://docs.rs/txcript"><img src="https://img.shields.io/docsrs/txcript?logo=docsdotrs" alt="docs.rs"></a>
   <a href="https://github.com/skillsynchq/txcript/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/skillsynchq/txcript/ci.yml?branch=main&logo=github&label=ci" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
 </p>
 
 <p align="center">
-  <a href="https://claude.com/claude-code"><img src="docs/assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
+  <a href="https://claude.com/claude-code"><img src="../assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://github.com/openai/codex"><img src="https://github.com/openai.png?size=160" alt="Codex" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -40,7 +40,7 @@
 Claude Code मध्ये सेशन सुरू करा; usage limit लागली किंवा काम अडलं, की संपूर्ण संभाषण, reasoning आणि टूल हिस्ट्रीसह तेच सेशन Codex मध्ये जसंच्या तसं पुढे चालू ठेवा:
 
 <p align="center">
-  <img src="docs/assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
+  <img src="../assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
 </p>
 
 txcript प्रत्येक हार्नेसचा नेटिव्ह ट्रान्सक्रिप्ट फॉरमॅट एका टाइप्ड कॉमन मॉडेलमधून मॅप करते. नेटिव्ह load/save बाइट-न्-बाइट लॉसलेस आहे; एका हार्नेसमधून दुसऱ्यात रूपांतर करताना मेसेजेस, reasoning, टूल कॉल्स, टूल रिझल्ट्स, इमेजेस, मेटाडेटा आणि usage (जिथे उपलब्ध असेल तिथे) जपले जातात. हे [**CLI**](#cli), [**Rust crate**](#rust-crate) आणि [**npm package**](#npm-package) या तीन रूपांत मिळते.
@@ -52,7 +52,7 @@ txcript प्रत्येक हार्नेसचा नेटिव्�
 - **कुठेही पुढे चालू ठेवा**: `txcript continue <id> --with <harness>` सेशन दुसऱ्या हार्नेसच्या नेटिव्ह फॉरमॅटमध्ये पुन्हा लिहून तो हार्नेस लाँच करते. मूळ सेशनला कधीही धक्का लागत नाही.
 - **सगळं शोधा**: मशीनवरील प्रत्येक सेशनवर fuzzy/substring शोध (fzf-शैलीचा सिंटॅक्स, [nucleo](https://github.com/helix-editor/nucleo) वर आधारित) — लायब्ररी API, वन-शॉट CLI क्वेरी किंवा इंटरॅक्टिव्ह पिकर म्हणून.
 - **MCP सर्व्हर**: `txcript mcp` रीड-ओन्ली `list_sessions`, `search_sessions` आणि `read_session` टूल्स उपलब्ध करून देते, त्यामुळे एजंट्स जुनी सेशन्स कॉन्टेक्स्ट म्हणून वापरू शकतात.
-- **डॉक्युमेंट केलेले फॉरमॅट्स**: प्रत्येक हार्नेसचा ऑन-डिस्क फॉरमॅट [`docs/formats/`](docs/formats) मध्ये सविस्तर लिहिलेला आहे, आणि प्रत्येक विधानाला त्याचा पुरावा जोडलेला आहे (अधिकृत डॉक्स, source permalinks किंवा reverse-engineering नोट्स).
+- **डॉक्युमेंट केलेले फॉरमॅट्स**: प्रत्येक हार्नेसचा ऑन-डिस्क फॉरमॅट [`docs/formats/`](../formats) मध्ये सविस्तर लिहिलेला आहे, आणि प्रत्येक विधानाला त्याचा पुरावा जोडलेला आहे (अधिकृत डॉक्स, source permalinks किंवा reverse-engineering नोट्स).
 
 ## समर्थित हार्नेस
 
@@ -74,16 +74,16 @@ flowchart LR
 
 | हार्नेस | id | डिस्कवरील सेशन्स | नेटिव्ह फॉरमॅट | रूपांतर | पुढे चालू | डॉक |
 |---|---|---|---|:---:|:---:|---|
-| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [स्पेक](docs/formats/claude-code.md) |
-| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | rollout JSONL | ⇄ | ✓ | [स्पेक](docs/formats/codex.md) |
-| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [स्पेक](docs/formats/opencode.md) |
-| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [स्पेक](docs/formats/pi.md) |
-| [Campfire](docs/formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [स्पेक](docs/formats/campfire.md) |
-| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [स्पेक](docs/formats/cursor.md) |
+| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [स्पेक](../formats/claude-code.md) |
+| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | rollout JSONL | ⇄ | ✓ | [स्पेक](../formats/codex.md) |
+| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [स्पेक](../formats/opencode.md) |
+| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [स्पेक](../formats/pi.md) |
+| [Campfire](../formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [स्पेक](../formats/campfire.md) |
+| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [स्पेक](../formats/cursor.md) |
 | [Cursor desktop](https://cursor.com) | `cursor_desktop` | `<Cursor User dir>/globalStorage/` | SQLite | ⇄ | ✓ | — |
-| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | सेशन डिरेक्टरी (JSON) | ⇄ | ✓ | [स्पेक](docs/formats/grok.md) |
-| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | थ्रेड JSON | → | — <sup>1</sup> | [स्पेक](docs/formats/amp.md) |
-| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [स्पेक](docs/formats/antigravity.md) |
+| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | सेशन डिरेक्टरी (JSON) | ⇄ | ✓ | [स्पेक](../formats/grok.md) |
+| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | थ्रेड JSON | → | — <sup>1</sup> | [स्पेक](../formats/amp.md) |
+| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [स्पेक](../formats/antigravity.md) |
 
 <sup>1</sup> Amp चे थ्रेड्स सर्व्हर-साइड असतात आणि CLI मध्ये import नाही: सेशन्स Amp *मधून* रूपांतरित होतात, पण Amp मध्ये पुढे चालू ठेवता येत नाहीत.
 
@@ -289,7 +289,7 @@ bun run build        # produces ./pkg
 
 ## फॉरमॅट डॉक्युमेंटेशन
 
-प्रत्येक ट्रान्सक्रिप्ट फॉरमॅटचं त्याच्या व्हेंडरकडून डॉक्युमेंटेशन असतंच असं नाही. [`docs/formats/`](docs/formats) मध्ये प्रत्येक हार्नेससाठी एक डॉक्युमेंट आहे: सेशन्स डिस्कवर कुठे राहतात, डिस्कव्हरी ती कशी शोधते, फॉरमॅटच्या प्रत्येक भागाचं सविस्तर विश्लेषण आणि त्याच्या खोडी — आणि प्रत्येक विधानाला त्याचा पुरावा जोडलेला आहे: अधिकृत डॉक्युमेंटेशन, हार्नेसचाच ओपन-सोर्स serialization कोड (commit-pinned permalinks सह) किंवा reverse engineering.
+प्रत्येक ट्रान्सक्रिप्ट फॉरमॅटचं त्याच्या व्हेंडरकडून डॉक्युमेंटेशन असतंच असं नाही. [`docs/formats/`](../formats) मध्ये प्रत्येक हार्नेससाठी एक डॉक्युमेंट आहे: सेशन्स डिस्कवर कुठे राहतात, डिस्कव्हरी ती कशी शोधते, फॉरमॅटच्या प्रत्येक भागाचं सविस्तर विश्लेषण आणि त्याच्या खोडी — आणि प्रत्येक विधानाला त्याचा पुरावा जोडलेला आहे: अधिकृत डॉक्युमेंटेशन, हार्नेसचाच ओपन-सोर्स serialization कोड (commit-pinned permalinks सह) किंवा reverse engineering.
 
 ## डेव्हलपमेंट
 
@@ -303,4 +303,4 @@ bun run build && bun examples/convert.ts <file> <from> <to>
 
 ## लायसन्स
 
-[Apache-2.0](LICENSE)
+[Apache-2.0](../../LICENSE)

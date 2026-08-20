@@ -1,14 +1,14 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/wordmark-dark.svg">
-    <img src="docs/assets/wordmark-light.svg" alt="txcript" width="600">
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/wordmark-dark.svg">
+    <img src="../assets/wordmark-light.svg" alt="txcript" width="600">
   </picture>
 </p>
 
 <p align="center">ஒரு ஹார்னெஸிலிருந்து இன்னொன்றுக்கு செஷன்களை நகர்த்த ஒரு லைப்ரரி</p>
 
 <p align="center">
-  <a href="README.md">English</a> | <a href="README.ja.md">日本語</a> | <a href="README.zh-CN.md">简体中文</a> | <a href="README.zh-TW.md">繁體中文</a> | <a href="README.ko.md">한국어</a> | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | <a href="README.pt-BR.md">Português (Brasil)</a> | <a href="README.ru.md">Русский</a> | <a href="README.mr.md">मराठी</a> | தமிழ்
+  <a href="../../README.md">English</a> | <a href="README.ja.md">日本語</a> | <a href="README.zh-CN.md">简体中文</a> | <a href="README.zh-TW.md">繁體中文</a> | <a href="README.ko.md">한국어</a> | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | <a href="README.pt-BR.md">Português (Brasil)</a> | <a href="README.ru.md">Русский</a> | <a href="README.mr.md">मराठी</a> | தமிழ்
 </p>
 
 <p align="center">
@@ -16,11 +16,11 @@
   <a href="https://www.npmjs.com/package/txcript"><img src="https://img.shields.io/npm/v/txcript?logo=npm&color=4c71f2" alt="npm"></a>
   <a href="https://docs.rs/txcript"><img src="https://img.shields.io/docsrs/txcript?logo=docsdotrs" alt="docs.rs"></a>
   <a href="https://github.com/skillsynchq/txcript/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/skillsynchq/txcript/ci.yml?branch=main&logo=github&label=ci" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
 </p>
 
 <p align="center">
-  <a href="https://claude.com/claude-code"><img src="docs/assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
+  <a href="https://claude.com/claude-code"><img src="../assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://github.com/openai/codex"><img src="https://github.com/openai.png?size=160" alt="Codex" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -40,7 +40,7 @@
 Claude Code-இல் ஒரு செஷனைத் தொடங்குங்கள்; usage limit வந்தாலோ, வேலை நடுவில் நின்றாலோ, முழு உரையாடல், reasoning, டூல் ஹிஸ்டரி எல்லாம் அப்படியே இருக்க, அதே செஷனை Codex-இல் தொடருங்கள்:
 
 <p align="center">
-  <img src="docs/assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
+  <img src="../assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
 </p>
 
 txcript ஒவ்வொரு ஹார்னெஸின் நேட்டிவ் டிரான்ஸ்கிரிப்ட் ஃபார்மட்டையும் ஒரு typed பொது மாடல் வழியாக மேப் செய்கிறது. நேட்டிவ் load/save பைட்-அளவில் லாஸ்லெஸ்; ஒரு ஹார்னெஸிலிருந்து இன்னொன்றுக்கு மாற்றும்போது மெசேஜ்கள், reasoning, டூல் கால்கள், டூல் ரிசல்ட்கள், படங்கள், மெட்டாடேட்டா, usage (கிடைக்கும் இடங்களில்) அனைத்தும் பாதுகாக்கப்படுகின்றன. இது [**CLI**](#cli), [**Rust crate**](#rust-crate), [**npm package**](#npm-package) என மூன்று வடிவங்களில் கிடைக்கிறது.
@@ -52,7 +52,7 @@ txcript ஒவ்வொரு ஹார்னெஸின் நேட்டி�
 - **எங்கும் தொடரலாம்**: `txcript continue <id> --with <harness>` செஷனை இன்னொரு ஹார்னெஸின் நேட்டிவ் ஃபார்மட்டில் மீண்டும் எழுதி அந்த ஹார்னெஸை launch செய்கிறது. மூல செஷன் ஒருபோதும் மாற்றப்படாது.
 - **எல்லாவற்றையும் தேடுங்கள்**: மெஷினிலுள்ள ஒவ்வொரு செஷனிலும் fuzzy/substring தேடல் (fzf-பாணி syntax, [nucleo](https://github.com/helix-editor/nucleo) அடிப்படையில்) — லைப்ரரி API ஆகவோ, one-shot CLI query ஆகவோ, interactive picker ஆகவோ.
 - **MCP சர்வர்**: `txcript mcp` read-only `list_sessions`, `search_sessions`, `read_session` டூல்களை வெளிப்படுத்துகிறது; ஏஜென்ட்கள் பழைய செஷன்களை context ஆகப் பயன்படுத்திக்கொள்ளலாம்.
-- **ஆவணப்படுத்தப்பட்ட ஃபார்மட்கள்**: ஒவ்வொரு ஹார்னெஸின் on-disk ஃபார்மட்டும் [`docs/formats/`](docs/formats)-இல் விரிவாக எழுதப்பட்டுள்ளது; ஒவ்வொரு கூற்றுக்கும் ஆதாரம் (அதிகாரப்பூர்வ ஆவணங்கள், source permalinks அல்லது reverse-engineering குறிப்புகள்) இணைக்கப்பட்டுள்ளது.
+- **ஆவணப்படுத்தப்பட்ட ஃபார்மட்கள்**: ஒவ்வொரு ஹார்னெஸின் on-disk ஃபார்மட்டும் [`docs/formats/`](../formats)-இல் விரிவாக எழுதப்பட்டுள்ளது; ஒவ்வொரு கூற்றுக்கும் ஆதாரம் (அதிகாரப்பூர்வ ஆவணங்கள், source permalinks அல்லது reverse-engineering குறிப்புகள்) இணைக்கப்பட்டுள்ளது.
 
 ## ஆதரிக்கப்படும் ஹார்னெஸ்கள்
 
@@ -74,16 +74,16 @@ flowchart LR
 
 | ஹார்னெஸ் | id | டிஸ்கில் செஷன்கள் | நேட்டிவ் ஃபார்மட் | மாற்றம் | தொடர | டாக் |
 |---|---|---|---|:---:|:---:|---|
-| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [ஸ்பெக்](docs/formats/claude-code.md) |
-| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | rollout JSONL | ⇄ | ✓ | [ஸ்பெக்](docs/formats/codex.md) |
-| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [ஸ்பெக்](docs/formats/opencode.md) |
-| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [ஸ்பெக்](docs/formats/pi.md) |
-| [Campfire](docs/formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [ஸ்பெக்](docs/formats/campfire.md) |
-| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [ஸ்பெக்](docs/formats/cursor.md) |
+| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [ஸ்பெக்](../formats/claude-code.md) |
+| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | rollout JSONL | ⇄ | ✓ | [ஸ்பெக்](../formats/codex.md) |
+| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [ஸ்பெக்](../formats/opencode.md) |
+| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [ஸ்பெக்](../formats/pi.md) |
+| [Campfire](../formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [ஸ்பெக்](../formats/campfire.md) |
+| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [ஸ்பெக்](../formats/cursor.md) |
 | [Cursor desktop](https://cursor.com) | `cursor_desktop` | `<Cursor User dir>/globalStorage/` | SQLite | ⇄ | ✓ | — |
-| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | செஷன் டைரக்டரி (JSON) | ⇄ | ✓ | [ஸ்பெக்](docs/formats/grok.md) |
-| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | த்ரெட் JSON | → | — <sup>1</sup> | [ஸ்பெக்](docs/formats/amp.md) |
-| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [ஸ்பெக்](docs/formats/antigravity.md) |
+| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | செஷன் டைரக்டரி (JSON) | ⇄ | ✓ | [ஸ்பெக்](../formats/grok.md) |
+| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | த்ரெட் JSON | → | — <sup>1</sup> | [ஸ்பெக்](../formats/amp.md) |
+| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [ஸ்பெக்](../formats/antigravity.md) |
 
 <sup>1</sup> Amp-இன் த்ரெட்கள் சர்வர் பக்கம் இருக்கின்றன; CLI-இல் import இல்லை: செஷன்களை Amp-*இலிருந்து* மாற்றலாம், ஆனால் Amp-க்குள் தொடர முடியாது.
 
@@ -289,7 +289,7 @@ bun run build        # produces ./pkg
 
 ## ஃபார்மட் ஆவணங்கள்
 
-இந்த டிரான்ஸ்கிரிப்ட் ஃபார்மட்கள் எல்லாவற்றையும் அவற்றின் vendor-கள் ஆவணப்படுத்தவில்லை. [`docs/formats/`](docs/formats)-இல் ஹார்னெஸுக்கு ஒரு ஆவணம் உள்ளது: செஷன்கள் டிஸ்கில் எங்கே இருக்கின்றன, discovery அவற்றை எப்படிக் கண்டுபிடிக்கிறது, ஃபார்மட்டின் ஒவ்வொரு பகுதியின் விரிவான விளக்கம், அதன் விநோதங்கள் — ஒவ்வொரு கூற்றுக்கும் அதன் ஆதாரம் குறிக்கப்பட்டுள்ளது: அதிகாரப்பூர்வ ஆவணம், ஹார்னெஸின் சொந்த open-source serialization code (commit-pinned permalink-களுடன்), அல்லது reverse engineering.
+இந்த டிரான்ஸ்கிரிப்ட் ஃபார்மட்கள் எல்லாவற்றையும் அவற்றின் vendor-கள் ஆவணப்படுத்தவில்லை. [`docs/formats/`](../formats)-இல் ஹார்னெஸுக்கு ஒரு ஆவணம் உள்ளது: செஷன்கள் டிஸ்கில் எங்கே இருக்கின்றன, discovery அவற்றை எப்படிக் கண்டுபிடிக்கிறது, ஃபார்மட்டின் ஒவ்வொரு பகுதியின் விரிவான விளக்கம், அதன் விநோதங்கள் — ஒவ்வொரு கூற்றுக்கும் அதன் ஆதாரம் குறிக்கப்பட்டுள்ளது: அதிகாரப்பூர்வ ஆவணம், ஹார்னெஸின் சொந்த open-source serialization code (commit-pinned permalink-களுடன்), அல்லது reverse engineering.
 
 ## டெவலப்மென்ட்
 
@@ -303,4 +303,4 @@ bun run build && bun examples/convert.ts <file> <from> <to>
 
 ## லைசென்ஸ்
 
-[Apache-2.0](LICENSE)
+[Apache-2.0](../../LICENSE)

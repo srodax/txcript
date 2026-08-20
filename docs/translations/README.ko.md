@@ -1,14 +1,14 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/wordmark-dark.svg">
-    <img src="docs/assets/wordmark-light.svg" alt="txcript" width="600">
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/wordmark-dark.svg">
+    <img src="../assets/wordmark-light.svg" alt="txcript" width="600">
   </picture>
 </p>
 
 <p align="center">하네스 간에 세션을 옮기기 위한 라이브러리</p>
 
 <p align="center">
-  <a href="README.md">English</a> | <a href="README.ja.md">日本語</a> | <a href="README.zh-CN.md">简体中文</a> | <a href="README.zh-TW.md">繁體中文</a> | 한국어 | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | <a href="README.pt-BR.md">Português (Brasil)</a> | <a href="README.ru.md">Русский</a> | <a href="README.mr.md">मराठी</a> | <a href="README.ta.md">தமிழ்</a>
+  <a href="../../README.md">English</a> | <a href="README.ja.md">日本語</a> | <a href="README.zh-CN.md">简体中文</a> | <a href="README.zh-TW.md">繁體中文</a> | 한국어 | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | <a href="README.pt-BR.md">Português (Brasil)</a> | <a href="README.ru.md">Русский</a> | <a href="README.mr.md">मराठी</a> | <a href="README.ta.md">தமிழ்</a>
 </p>
 
 <p align="center">
@@ -16,11 +16,11 @@
   <a href="https://www.npmjs.com/package/txcript"><img src="https://img.shields.io/npm/v/txcript?logo=npm&color=4c71f2" alt="npm"></a>
   <a href="https://docs.rs/txcript"><img src="https://img.shields.io/docsrs/txcript?logo=docsdotrs" alt="docs.rs"></a>
   <a href="https://github.com/skillsynchq/txcript/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/skillsynchq/txcript/ci.yml?branch=main&logo=github&label=ci" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
 </p>
 
 <p align="center">
-  <a href="https://claude.com/claude-code"><img src="docs/assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
+  <a href="https://claude.com/claude-code"><img src="../assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://github.com/openai/codex"><img src="https://github.com/openai.png?size=160" alt="Codex" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -40,7 +40,7 @@
 Claude Code에서 세션을 시작했다가 사용량 한도나 막다른 길에 부딪히면, Codex에서 그대로 이어가세요 — 대화, 추론, 도구 히스토리를 전부 유지한 채로:
 
 <p align="center">
-  <img src="docs/assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
+  <img src="../assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
 </p>
 
 txcript는 각 하네스의 네이티브 트랜스크립트 형식을 타입이 지정된 공통 모델을 통해 매핑합니다. 네이티브 로드/저장은 바이트 단위로 무손실이며, 하네스 간 변환은 메시지, 추론, 도구 호출, 도구 결과, 이미지, 메타데이터, 그리고 가능한 경우 사용량 정보를 보존합니다. [**CLI**](#cli), [**Rust 크레이트**](#rust-크레이트), [**npm 패키지**](#npm-패키지)로 제공됩니다.
@@ -52,7 +52,7 @@ txcript는 각 하네스의 네이티브 트랜스크립트 형식을 타입이 
 - **어디서든 이어가기**: `txcript continue <id> --with <harness>`는 세션을 다른 하네스의 네이티브 형식으로 다시 써서 실행합니다. 원본은 절대 수정되지 않습니다.
 - **전부 검색**: 머신에 있는 모든 세션을 대상으로 하는 퍼지/부분 문자열 검색(fzf 스타일 문법, [nucleo](https://github.com/helix-editor/nucleo) 기반)을 라이브러리 API, 원샷 CLI 쿼리, 대화형 피커로 사용할 수 있습니다.
 - **MCP 서버**: `txcript mcp`는 읽기 전용 `list_sessions`, `search_sessions`, `read_session` 도구를 노출해, 에이전트가 과거 세션을 컨텍스트로 캐낼 수 있게 합니다.
-- **문서화된 형식**: 각 하네스의 온디스크 형식은 [`docs/formats/`](docs/formats)에 정리되어 있으며, 각 서술마다 출처(공식 문서, 소스 퍼머링크, 또는 리버스 엔지니어링 노트)가 붙어 있습니다.
+- **문서화된 형식**: 각 하네스의 온디스크 형식은 [`docs/formats/`](../formats)에 정리되어 있으며, 각 서술마다 출처(공식 문서, 소스 퍼머링크, 또는 리버스 엔지니어링 노트)가 붙어 있습니다.
 
 ## 지원 하네스
 
@@ -74,16 +74,16 @@ flowchart LR
 
 | 하네스 | id | 디스크의 세션 위치 | 네이티브 형식 | 변환 | 이어가기 대상 | 문서 |
 |---|---|---|---|:---:|:---:|---|
-| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [스펙](docs/formats/claude-code.md) |
-| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | 롤아웃 JSONL | ⇄ | ✓ | [스펙](docs/formats/codex.md) |
-| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [스펙](docs/formats/opencode.md) |
-| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [스펙](docs/formats/pi.md) |
-| [Campfire](docs/formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [스펙](docs/formats/campfire.md) |
-| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [스펙](docs/formats/cursor.md) |
+| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [스펙](../formats/claude-code.md) |
+| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | 롤아웃 JSONL | ⇄ | ✓ | [스펙](../formats/codex.md) |
+| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [스펙](../formats/opencode.md) |
+| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [스펙](../formats/pi.md) |
+| [Campfire](../formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [스펙](../formats/campfire.md) |
+| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [스펙](../formats/cursor.md) |
 | [Cursor desktop](https://cursor.com) | `cursor_desktop` | `<Cursor User dir>/globalStorage/` | SQLite | ⇄ | ✓ | — |
-| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | 세션 디렉터리 JSON | ⇄ | ✓ | [스펙](docs/formats/grok.md) |
-| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | 스레드 JSON | → | — <sup>1</sup> | [스펙](docs/formats/amp.md) |
-| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [스펙](docs/formats/antigravity.md) |
+| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | 세션 디렉터리 JSON | ⇄ | ✓ | [스펙](../formats/grok.md) |
+| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | 스레드 JSON | → | — <sup>1</sup> | [스펙](../formats/amp.md) |
+| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [스펙](../formats/antigravity.md) |
 
 <sup>1</sup> Amp 스레드는 서버 측에 있고 CLI에 가져오기 기능이 없습니다: 세션을 Amp*에서* 변환해 올 수는 있지만, Amp로 이어갈 수는 없습니다.
 
@@ -289,7 +289,7 @@ bun run build        # produces ./pkg
 
 ## 형식 문서
 
-이 트랜스크립트 형식들이 전부 벤더에 의해 문서화되어 있는 것은 아닙니다. [`docs/formats/`](docs/formats)에는 하네스마다 문서가 하나씩 있으며, 세션이 디스크 어디에 저장되는지, 탐색이 이를 어떻게 찾는지, 형식의 모든 부분에 대한 해부, 그리고 그 형식의 별난 점들을 다룹니다. 각 서술에는 그 주장의 출처가 태그로 붙어 있습니다: 공식 문서, 하네스 자신의 오픈소스 직렬화 코드(커밋에 고정된 퍼머링크로 인용), 또는 리버스 엔지니어링.
+이 트랜스크립트 형식들이 전부 벤더에 의해 문서화되어 있는 것은 아닙니다. [`docs/formats/`](../formats)에는 하네스마다 문서가 하나씩 있으며, 세션이 디스크 어디에 저장되는지, 탐색이 이를 어떻게 찾는지, 형식의 모든 부분에 대한 해부, 그리고 그 형식의 별난 점들을 다룹니다. 각 서술에는 그 주장의 출처가 태그로 붙어 있습니다: 공식 문서, 하네스 자신의 오픈소스 직렬화 코드(커밋에 고정된 퍼머링크로 인용), 또는 리버스 엔지니어링.
 
 ## 개발
 
@@ -303,4 +303,4 @@ bun run build && bun examples/convert.ts <file> <from> <to>
 
 ## 라이선스
 
-[Apache-2.0](LICENSE)
+[Apache-2.0](../../LICENSE)

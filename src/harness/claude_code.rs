@@ -925,12 +925,27 @@ fn serialize_tool_output(out: &ToolOutput) -> Value {
     }
 }
 
+/// The block tags the Anthropic wire accepts inside `tool_result.content`.
+/// Foreign harnesses put other tags there (Simple carries them through
+/// verbatim); emitting one makes the whole session unloadable on resume.
+const TOOL_RESULT_BLOCK_TAGS: [&str; 6] = [
+    "browser_state",
+    "document",
+    "image",
+    "search_result",
+    "text",
+    "tool_reference",
+];
+
 /// Whether a value is an Anthropic content-block array — the only non-string
 /// shape Claude Code itself writes into `tool_result.content`.
 fn is_block_array(v: &Value) -> bool {
     v.as_array().is_some_and(|arr| {
-        arr.iter()
-            .all(|b| b.get("type").and_then(Value::as_str).is_some())
+        arr.iter().all(|b| {
+            b.get("type")
+                .and_then(Value::as_str)
+                .is_some_and(|tag| TOOL_RESULT_BLOCK_TAGS.contains(&tag))
+        })
     })
 }
 

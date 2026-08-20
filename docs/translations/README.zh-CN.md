@@ -1,14 +1,14 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/wordmark-dark.svg">
-    <img src="docs/assets/wordmark-light.svg" alt="txcript" width="600">
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/wordmark-dark.svg">
+    <img src="../assets/wordmark-light.svg" alt="txcript" width="600">
   </picture>
 </p>
 
 <p align="center">一个在 harness 之间迁移会话的库</p>
 
 <p align="center">
-  <a href="README.md">English</a> | <a href="README.ja.md">日本語</a> | 简体中文 | <a href="README.zh-TW.md">繁體中文</a> | <a href="README.ko.md">한국어</a> | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | <a href="README.pt-BR.md">Português (Brasil)</a> | <a href="README.ru.md">Русский</a> | <a href="README.mr.md">मराठी</a> | <a href="README.ta.md">தமிழ்</a>
+  <a href="../../README.md">English</a> | <a href="README.ja.md">日本語</a> | 简体中文 | <a href="README.zh-TW.md">繁體中文</a> | <a href="README.ko.md">한국어</a> | <a href="README.de.md">Deutsch</a> | <a href="README.es.md">Español</a> | <a href="README.fr.md">Français</a> | <a href="README.it.md">Italiano</a> | <a href="README.pt-BR.md">Português (Brasil)</a> | <a href="README.ru.md">Русский</a> | <a href="README.mr.md">मराठी</a> | <a href="README.ta.md">தமிழ்</a>
 </p>
 
 <p align="center">
@@ -16,11 +16,11 @@
   <a href="https://www.npmjs.com/package/txcript"><img src="https://img.shields.io/npm/v/txcript?logo=npm&color=4c71f2" alt="npm"></a>
   <a href="https://docs.rs/txcript"><img src="https://img.shields.io/docsrs/txcript?logo=docsdotrs" alt="docs.rs"></a>
   <a href="https://github.com/skillsynchq/txcript/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/skillsynchq/txcript/ci.yml?branch=main&logo=github&label=ci" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-555" alt="License"></a>
 </p>
 
 <p align="center">
-  <a href="https://claude.com/claude-code"><img src="docs/assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
+  <a href="https://claude.com/claude-code"><img src="../assets/claude-icon.svg" alt="Claude Code" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://github.com/openai/codex"><img src="https://github.com/openai.png?size=160" alt="Codex" height="44" width="44"></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -40,7 +40,7 @@
 在 Claude Code 中开始一个会话，遇到用量限制或卡壳时，换到 Codex 里接着做，完整的对话、推理和工具历史原样保留：
 
 <p align="center">
-  <img src="docs/assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
+  <img src="../assets/demo.gif" alt="txcript continue: an OpenCode session resumed in Claude Code">
 </p>
 
 txcript 通过一个带类型的公共模型来映射各个 harness 的原生会话记录格式。原生加载/保存是字节级无损的；跨 harness 转换会保留消息、推理、工具调用、工具结果、图像、元数据，以及在可用时的用量信息。它以 [**CLI**](#cli)、[**Rust crate**](#rust-crate) 和 [**npm 包**](#npm-包) 的形式发布。
@@ -52,7 +52,7 @@ txcript 通过一个带类型的公共模型来映射各个 harness 的原生会
 - **随处继续**：`txcript continue <id> --with <harness>` 会把会话重写为另一个 harness 的原生格式并启动它。原始会话绝不会被修改。
 - **搜索一切**：对本机上的所有会话做模糊/子串搜索（fzf 风格语法，由 [nucleo](https://github.com/helix-editor/nucleo) 驱动），可作为库 API、一次性 CLI 查询或交互式选择器使用。
 - **MCP 服务器**：`txcript mcp` 暴露只读的 `list_sessions`、`search_sessions` 和 `read_session` 工具，让智能体可以把过往会话作为上下文来挖掘。
-- **格式文档齐全**：每个 harness 的磁盘格式都在 [`docs/formats/`](docs/formats) 中有完整记述，且每条论断都注明出处（官方文档、源码 permalink 或逆向工程笔记）。
+- **格式文档齐全**：每个 harness 的磁盘格式都在 [`docs/formats/`](../formats) 中有完整记述，且每条论断都注明出处（官方文档、源码 permalink 或逆向工程笔记）。
 
 ## 支持的 harness
 
@@ -74,16 +74,16 @@ flowchart LR
 
 | Harness | id | 磁盘上的会话 | 原生格式 | 转换 | 可继续到 | 文档 |
 |---|---|---|---|:---:|:---:|---|
-| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [规格](docs/formats/claude-code.md) |
-| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | rollout JSONL | ⇄ | ✓ | [规格](docs/formats/codex.md) |
-| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [规格](docs/formats/opencode.md) |
-| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [规格](docs/formats/pi.md) |
-| [Campfire](docs/formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [规格](docs/formats/campfire.md) |
-| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [规格](docs/formats/cursor.md) |
+| [Claude Code](https://claude.com/claude-code) | `claude_code` | `~/.claude/projects/` | JSONL | ⇄ | ✓ | [规格](../formats/claude-code.md) |
+| [Codex](https://github.com/openai/codex) | `codex` | `~/.codex/sessions/` | rollout JSONL | ⇄ | ✓ | [规格](../formats/codex.md) |
+| [OpenCode](https://opencode.ai) | `opencode` | `~/.local/share/opencode/opencode.db` | SQLite | ⇄ | ✓ | [规格](../formats/opencode.md) |
+| [pi](https://pi.dev) | `pi` | `~/.pi/agent/sessions/` | JSONL | ⇄ | ✓ | [规格](../formats/pi.md) |
+| [Campfire](../formats/campfire.md) | `campfire` | `~/.campfire/agent/sessions/` | JSONL | ⇄ | ✓ | [规格](../formats/campfire.md) |
+| [Cursor CLI](https://cursor.com/cli) | `cursor` | `~/.cursor/chats/` | SQLite | ⇄ | ✓ | [规格](../formats/cursor.md) |
 | [Cursor desktop](https://cursor.com) | `cursor_desktop` | `<Cursor User dir>/globalStorage/` | SQLite | ⇄ | ✓ | — |
-| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | 会话目录（JSON） | ⇄ | ✓ | [规格](docs/formats/grok.md) |
-| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | 线程 JSON | → | — <sup>1</sup> | [规格](docs/formats/amp.md) |
-| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [规格](docs/formats/antigravity.md) |
+| [Grok CLI](https://github.com/xai-org/grok-build) | `grok` | `~/.grok/sessions/` | 会话目录（JSON） | ⇄ | ✓ | [规格](../formats/grok.md) |
+| [Amp](https://ampcode.com) | `amp` | `~/.local/share/amp/threads/` | 线程 JSON | → | — <sup>1</sup> | [规格](../formats/amp.md) |
+| [Antigravity](https://antigravity.google) | `antigravity` | `~/.gemini/antigravity-cli/` | SQLite | ⇄ | ✓ | [规格](../formats/antigravity.md) |
 
 <sup>1</sup> Amp 的线程保存在服务端，且 CLI 没有导入功能：会话可以*从* Amp 转换，但无法继续到 Amp 中。
 
@@ -289,7 +289,7 @@ bun run build        # produces ./pkg
 
 ## 格式文档
 
-这些会话记录格式并非都有厂商提供的官方文档。[`docs/formats/`](docs/formats) 为每个 harness 提供一份文档，涵盖会话在磁盘上的位置、发现机制如何找到它们、对格式各部分的逐一剖析及其怪癖，并且每条论断都标注了出处：官方文档、harness 自身的开源序列化代码（附有锁定到具体 commit 的 permalink），或逆向工程。
+这些会话记录格式并非都有厂商提供的官方文档。[`docs/formats/`](../formats) 为每个 harness 提供一份文档，涵盖会话在磁盘上的位置、发现机制如何找到它们、对格式各部分的逐一剖析及其怪癖，并且每条论断都标注了出处：官方文档、harness 自身的开源序列化代码（附有锁定到具体 commit 的 permalink），或逆向工程。
 
 ## 开发
 
@@ -303,4 +303,4 @@ bun run build && bun examples/convert.ts <file> <from> <to>
 
 ## 许可证
 
-[Apache-2.0](LICENSE)
+[Apache-2.0](../../LICENSE)
