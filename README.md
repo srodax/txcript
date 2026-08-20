@@ -135,6 +135,7 @@ txcript view <id>[#range]                # print a session as compact text
     [--include user,assistant,tool-use]   #   filter the text projection
     [--drop-leading-setup]                #   drop AGENTS.md / env preamble
     [--drop-trailing-handoff]             #   drop the save-ceremony tail
+    [--max-tool-arg-chars <N>]            #   truncate huge tool arguments
 ```
 
 `continue` writes the session where the target harness keeps its sessions, then launches that harness on it, handing over the terminal:
@@ -150,12 +151,15 @@ txcript view <id>[#range]                # print a session as compact text
 
 `--drop-leading-setup` removes harness/repo environment that a new agent in the same repo will reload (`AGENTS.md`, plugin catalogs, `<environment_context>`, `<user_info>`). A Cursor blob that mixes that preamble with `<user_query>` keeps only the query. `--drop-trailing-handoff` cuts the save ceremony (`[$handoff]`, injected handoff `SKILL.md`, `txcript view` saves) so the file ends at the last real work turn. A leading `/handoff load` is kept.
 
+`--max-tool-arg-chars N` truncates tool-use argument JSON longer than N characters, keeping a prefix and appending `[truncated tool argument: kept N of TOTAL chars]`. User and assistant text are unchanged. Omit the flag to keep arguments intact.
+
 ```sh
 txcript view <session-id> \
   --from claude_code \
   --include user,assistant,tool-use \
   --drop-leading-setup \
-  --drop-trailing-handoff
+  --drop-trailing-handoff \
+  --max-tool-arg-chars 2000
 ```
 
 `#range` selects messages by those printed ordinals, 1-based and inclusive:

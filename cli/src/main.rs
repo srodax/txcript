@@ -20,6 +20,7 @@
 //!     [--include user,assistant,tool-use]   #   filter the text projection
 //!     [--drop-leading-setup]                #   drop AGENTS.md / env preamble
 //!     [--drop-trailing-handoff]             #   drop the save-ceremony tail
+//!     [--max-tool-arg-chars <N>]            #   truncate huge tool arguments
 //! txcript query '<pattern>'             # one-shot search, print ranked hits
 //! txcript query                         # fzf-style picker; Enter continues
 //!     [--from <harness>]                    #   search only <harness> (default: all)
@@ -156,6 +157,9 @@ enum Command {
         /// Drop the trailing handoff-save ceremony
         #[arg(long)]
         drop_trailing_handoff: bool,
+        /// Truncate tool-use argument JSON longer than N chars, keeping a prefix
+        #[arg(long, value_name = "N")]
+        max_tool_arg_chars: Option<usize>,
     },
     /// Search session content; without a pattern, open an fzf-style picker
     ///
@@ -247,12 +251,14 @@ async fn main() -> ExitCode {
             include,
             drop_leading_setup,
             drop_trailing_handoff,
+            max_tool_arg_chars,
         } => view::cmd_view(
             &source,
             from,
             &include,
             drop_leading_setup,
             drop_trailing_handoff,
+            max_tool_arg_chars,
         ),
         Command::Query {
             pattern,

@@ -24,6 +24,9 @@ pub struct TextFilter {
     pub thinking: bool,
     pub tool_use: bool,
     pub tool_result: bool,
+    /// If set, tool-use argument JSON longer than this many chars is cut
+    /// after a prefix, with a truncation marker. `None` keeps arguments intact.
+    pub max_tool_arg_chars: Option<usize>,
 }
 
 impl TextFilter {
@@ -34,6 +37,7 @@ impl TextFilter {
             thinking: true,
             tool_use: true,
             tool_result: true,
+            max_tool_arg_chars: None,
         }
     }
 
@@ -168,7 +172,7 @@ fn blocks<'a>(
                 let body = match &input {
                     serde_json::Value::Null => String::new(),
                     serde_json::Value::Object(map) if map.is_empty() => String::new(),
-                    input => input.to_string(),
+                    input => maybe_truncate_tool_arg(&input.to_string(), filter.max_tool_arg_chars),
                 };
                 section(out, &format!("tool {short_id} {}", one_line(&name)), &body);
                 rendered_any = true;
@@ -216,6 +220,18 @@ fn optional_field(out: &mut String, name: &str, value: Option<&str>) {
 
 fn one_line(value: &str) -> String {
     value.split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
+fn maybe_truncate_tool_arg(text: &str, max_chars: Option<usize>) -> String {
+    let Some(max_chars) = max_chars else {
+        return text.to_string();
+    };
+    let total = text.chars().count();
+    if total <= max_chars {
+        return text.to_string();
+    }
+    let kept: String = text.chars().take(max_chars).collect();
+    format!("{kept}\n[truncated tool argument: kept {max_chars} of {total} chars]")
 }
 
 fn section(out: &mut String, label: &str, text: &str) {
@@ -498,6 +514,7 @@ mod tests {
         thinking: false,
         tool_use: true,
         tool_result: false,
+        max_tool_arg_chars: None,
     };
 
     #[test]
@@ -583,5 +600,65 @@ mod tests {
         let filtered = to_text_with_filter(&t, HANDOFF);
         assert!(filtered.contains("[assistant]\nsee this"));
         assert!(!filtered.contains("[image"));
+    }
+
+    #[test]
+    fn truncates_long_tool_arguments_and_keeps_a_prefix() {
+        let long = "BEGIN_PATCH ".to_string() + &"ABCDEFGHIJ".repeat(20);
+        let t = transcript(vec![message(
+            Role::Assistant,
+            vec![Block::ToolUse {
+                id: "tool-1".into(),
+                tool: Tool::Raw {
+                    tool_name: "exec".into(),
+                    input: json!({"cmd": long}),
+                },
+            }],
+        )]);
+        let mut filter = HANDOFF;
+        filter.max_tool_arg_chars = Some(40);
+        let rendered = to_text_with_filter(&t, filter);
+        assert!(rendered.contains("[tool 1 exec]"));
+        assert!(rendered.contains("BEGIN_PATCH"));
+        assert!(rendered.contains("[truncated tool argument: kept 40 of"));
+        assert!(!rendered.contains(&"ABCDEFGHIJ".repeat(20)));
+        let total = rendered
+            .split("[tool 1 exec]\n")
+            .nth(1)
+            .unwrap()
+            .chars()
+            .count();
+        assert!(total < 200, "truncated body should stay small, got {total}");
+    }
+
+    #[test]
+    fn short_tool_arguments_are_not_truncated() {
+        let rendered = to_text_with_filter(
+            &representative_transcript(),
+            TextFilter {
+                max_tool_arg_chars: Some(40),
+                ..HANDOFF
+            },
+        );
+        assert!(rendered.contains("{\"command\":\"echo hi\"}"));
+        assert!(!rendered.contains("truncated tool argument"));
+    }
+
+    #[test]
+    fn tool_arg_limit_does_not_truncate_user_or_assistant_text() {
+        let long = "USERTEXT ".to_string() + &"x".repeat(80);
+        let t = transcript(vec![message(
+            Role::User,
+            vec![Block::Text { text: long.clone() }],
+        )]);
+        let rendered = to_text_with_filter(
+            &t,
+            TextFilter {
+                max_tool_arg_chars: Some(20),
+                ..HANDOFF
+            },
+        );
+        assert!(rendered.contains(&long));
+        assert!(!rendered.contains("truncated tool argument"));
     }
 }
