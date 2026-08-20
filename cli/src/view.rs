@@ -8,11 +8,43 @@
 
 use std::process::ExitCode;
 
-use txcript::{HarnessId, Span, text};
+use clap::ValueEnum;
+use txcript::{
+    HarnessId, Span,
+    text::{self, TextFilter},
+};
 
 use crate::fragment;
 
-pub fn cmd_view(source: &str, from: Option<HarnessId>) -> Result<ExitCode, String> {
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+pub enum ViewInclude {
+    User,
+    Assistant,
+    Thinking,
+    #[value(name = "tool-use")]
+    ToolUse,
+    #[value(name = "tool-result")]
+    ToolResult,
+}
+
+pub fn text_filter_from_includes(include: &[ViewInclude]) -> TextFilter {
+    if include.is_empty() {
+        return TextFilter::all();
+    }
+    TextFilter {
+        user: include.contains(&ViewInclude::User),
+        assistant: include.contains(&ViewInclude::Assistant),
+        thinking: include.contains(&ViewInclude::Thinking),
+        tool_use: include.contains(&ViewInclude::ToolUse),
+        tool_result: include.contains(&ViewInclude::ToolResult),
+    }
+}
+
+pub fn cmd_view(
+    source: &str,
+    from: Option<HarnessId>,
+    include: &[ViewInclude],
+) -> Result<ExitCode, String> {
     let sessions = super::discover_with_spinner();
     // A whole-input match (a title that itself contains `#12`) beats the
     // fragment interpretation.
@@ -34,11 +66,119 @@ pub fn cmd_view(source: &str, from: Option<HarnessId>) -> Result<ExitCode, Strin
         Some(req) => req.resolve(total)?,
         None => Span(0..total),
     };
+    let filter = text_filter_from_includes(include);
     // `resolve` bounds-checked against `total`, so the render always lands.
-    let rendered = text::to_text_fragment(&common, &span)
+    let rendered = text::to_text_fragment_with_filter(&common, &span, filter)
         .ok_or_else(|| format!("range is out of bounds — the session has {total} messages"))?;
     // A failed write means the reader is gone (`txcript view … | head`):
     // finish quietly instead of panicking the way `print!` would.
     let _ = std::io::Write::write_all(&mut std::io::stdout(), rendered.as_bytes());
     Ok(ExitCode::SUCCESS)
+}
+
+#[cfg(test)]
+mod tests {
+    use clap::{Parser, Subcommand};
+
+    use super::*;
+
+    #[derive(Parser)]
+    struct Cli {
+        #[command(subcommand)]
+        command: Command,
+    }
+
+    #[derive(Debug, PartialEq, Subcommand)]
+    enum Command {
+        View {
+            source: String,
+            #[arg(long)]
+            from: Option<HarnessId>,
+            #[arg(long, value_delimiter = ',', value_enum)]
+            include: Vec<ViewInclude>,
+        },
+    }
+
+    fn parse(args: &[&str]) -> Command {
+        let argv: Vec<&str> = std::iter::once("txcript")
+            .chain(args.iter().copied())
+            .collect();
+        Cli::try_parse_from(argv).unwrap().command
+    }
+
+    #[test]
+    fn parses_single_include_category() {
+        assert_eq!(
+            parse(&["view", "abc", "--include", "user"]),
+            Command::View {
+                source: "abc".into(),
+                from: None,
+                include: vec![ViewInclude::User],
+            }
+        );
+    }
+
+    #[test]
+    fn parses_multiple_include_categories() {
+        assert_eq!(
+            parse(&["view", "abc", "--include", "user,assistant,tool-use"]),
+            Command::View {
+                source: "abc".into(),
+                from: None,
+                include: vec![
+                    ViewInclude::User,
+                    ViewInclude::Assistant,
+                    ViewInclude::ToolUse,
+                ],
+            }
+        );
+    }
+
+    #[test]
+    fn parses_include_with_from() {
+        assert_eq!(
+            parse(&[
+                "view",
+                "abc",
+                "--from",
+                "codex",
+                "--include",
+                "user,assistant,tool-use",
+            ]),
+            Command::View {
+                source: "abc".into(),
+                from: Some(HarnessId::Codex),
+                include: vec![
+                    ViewInclude::User,
+                    ViewInclude::Assistant,
+                    ViewInclude::ToolUse,
+                ],
+            }
+        );
+    }
+
+    #[test]
+    fn rejects_unknown_include_category() {
+        let argv = ["txcript", "view", "abc", "--include", "banana"];
+        assert!(Cli::try_parse_from(argv).is_err());
+    }
+
+    #[test]
+    fn empty_include_means_all_categories() {
+        assert_eq!(text_filter_from_includes(&[]), TextFilter::all());
+    }
+
+    #[test]
+    fn selective_include_disables_unlisted_categories() {
+        let filter = text_filter_from_includes(&[
+            ViewInclude::User,
+            ViewInclude::Assistant,
+            ViewInclude::ToolUse,
+        ]);
+        assert!(filter.user);
+        assert!(filter.assistant);
+        assert!(filter.tool_use);
+        assert!(!filter.thinking);
+        assert!(!filter.tool_result);
+    }
 }

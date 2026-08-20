@@ -17,6 +17,7 @@
 //!                                           #   docs/formats/simple.md
 //! txcript view <id>[#range]             # print a session as compact text
 //!     [--from <harness>]                    #   scope the id lookup to one harness
+//!     [--include user,assistant,tool-use]   #   filter the text projection
 //! txcript query '<pattern>'             # one-shot search, print ranked hits
 //! txcript query                         # fzf-style picker; Enter continues
 //!     [--from <harness>]                    #   search only <harness> (default: all)
@@ -144,6 +145,9 @@ enum Command {
         /// Only look for the session in this harness
         #[arg(long, value_name = "HARNESS", value_parser = HarnessParser)]
         from: Option<HarnessId>,
+        /// Include only these block categories in the text projection
+        #[arg(long, value_delimiter = ',', value_enum)]
+        include: Vec<view::ViewInclude>,
     },
     /// Search session content; without a pattern, open an fzf-style picker
     ///
@@ -229,7 +233,11 @@ async fn main() -> ExitCode {
             out,
             no_resume,
         } => cmd_continue(&id, with, from, out.as_ref(), no_resume),
-        Command::View { source, from } => view::cmd_view(&source, from),
+        Command::View {
+            source,
+            from,
+            include,
+        } => view::cmd_view(&source, from, &include),
         Command::Query {
             pattern,
             with,

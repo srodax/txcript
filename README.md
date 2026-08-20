@@ -132,6 +132,7 @@ txcript continue <file|->[#range]        # continue a Simple document instead:
     --with <harness> [...]                #   a file, or stdin (`-`), from any agent
 txcript view <id>[#range]                # print a session as compact text
     [--from <harness>]                    #   scope the id lookup to one harness
+    [--include user,assistant,tool-use]   #   filter the text projection
 ```
 
 `continue` writes the session where the target harness keeps its sessions, then launches that harness on it, handing over the terminal:
@@ -141,7 +142,17 @@ txcript view <id>[#range]                # print a session as compact text
 - A [Simple](docs/formats/simple.md) document instead of an id — `txcript continue ./run.json --with claude_code`, or `my-agent | txcript continue - --with claude_code` — brings any agent's transcript in the same way; `--with` is required since a document has no harness of its own.
 - The launch command is per-harness and overridable: set `TRANSCRIPT_<HARNESS>_RESUME_CMD` to a `{id}` template, e.g. `TRANSCRIPT_CODEX_RESUME_CMD="codex resume {id}"`.
 
-`view` prints the session as compact text, each message numbered by a `── #N ──` rule. `#range` selects messages by those printed ordinals, 1-based and inclusive:
+`view` prints the session as compact text, each message numbered by a `── #N ──` rule.
+
+`--include` filters the existing text projection to named block categories (`user`, `assistant`, `thinking`, `tool-use`, `tool-result`). Omit it for the full projection:
+
+```sh
+txcript view <session-id> \
+  --from claude_code \
+  --include user,assistant,tool-use
+```
+
+`#range` selects messages by those printed ordinals, 1-based and inclusive:
 
 - `abc#7`: message 7 only
 - `abc#5-12`: messages 5 through 12

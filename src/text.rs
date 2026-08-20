@@ -16,6 +16,32 @@ use std::fmt::Write as _;
 use crate::common::{Block, Message, Meta, Role, ToolOutput};
 use crate::{Common, Span, Transcript};
 
+/// Which block categories to include in a text projection.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct TextFilter {
+    pub user: bool,
+    pub assistant: bool,
+    pub thinking: bool,
+    pub tool_use: bool,
+    pub tool_result: bool,
+}
+
+impl TextFilter {
+    pub const fn all() -> Self {
+        Self {
+            user: true,
+            assistant: true,
+            thinking: true,
+            tool_use: true,
+            tool_result: true,
+        }
+    }
+
+    fn includes_images(self) -> bool {
+        self.user && self.assistant && self.thinking && self.tool_use && self.tool_result
+    }
+}
+
 /// Render a canonical transcript as compact, LLM-oriented text.
 ///
 /// The format uses short bracketed labels instead of repeating the canonical
@@ -23,13 +49,20 @@ use crate::{Common, Span, Transcript};
 /// results remain paired without carrying provider-generated identifiers.
 #[must_use]
 pub fn to_text(transcript: &Transcript<Common>) -> String {
+    to_text_with_filter(transcript, TextFilter::all())
+}
+
+/// Render a canonical transcript as compact, LLM-oriented text, including
+/// only the block categories enabled in `filter`.
+#[must_use]
+pub fn to_text_with_filter(transcript: &Transcript<Common>, filter: TextFilter) -> String {
     let mut out = String::new();
     header(&mut out, &transcript.meta);
 
     let mut tool_ids = HashMap::<&str, usize>::new();
     let mut next_tool_id = 1;
     for message in &transcript.body {
-        blocks(&mut out, &mut tool_ids, &mut next_tool_id, message);
+        let _ = blocks(&mut out, &mut tool_ids, &mut next_tool_id, message, filter);
     }
 
     out
@@ -41,6 +74,17 @@ pub fn to_text(transcript: &Transcript<Common>) -> String {
 /// `None` when `span` is out of bounds, mirroring [`Transcript::fragment`].
 #[must_use]
 pub fn to_text_fragment(transcript: &Transcript<Common>, span: &Span) -> Option<String> {
+    to_text_fragment_with_filter(transcript, span, TextFilter::all())
+}
+
+/// Render `span` of the transcript in [`to_text`]'s format, including only
+/// the block categories enabled in `filter`.
+#[must_use]
+pub fn to_text_fragment_with_filter(
+    transcript: &Transcript<Common>,
+    span: &Span,
+    filter: TextFilter,
+) -> Option<String> {
     transcript.fragment(span).map(|messages| {
         let mut out = String::new();
         header(&mut out, &transcript.meta);
@@ -53,10 +97,19 @@ pub fn to_text_fragment(transcript: &Transcript<Common>, span: &Span) -> Option<
         let mut tool_ids = HashMap::<&str, usize>::new();
         let mut next_tool_id = 1;
         for (offset, message) in messages.iter().enumerate() {
-            // No trailing newline: `section` supplies the separator, keeping
-            // the rule flush against the first label under it.
-            let _ = write!(out, "\n── #{} ──", span.0.start + offset + 1);
-            blocks(&mut out, &mut tool_ids, &mut next_tool_id, message);
+            let mut message_out = String::new();
+            if blocks(
+                &mut message_out,
+                &mut tool_ids,
+                &mut next_tool_id,
+                message,
+                filter,
+            ) {
+                // No trailing newline: `section` supplies the separator, keeping
+                // the rule flush against the first label under it.
+                let _ = write!(out, "\n── #{} ──", span.0.start + offset + 1);
+                out.push_str(&message_out);
+            }
         }
         out
     })
@@ -87,18 +140,27 @@ fn blocks<'a>(
     tool_ids: &mut HashMap<&'a str, usize>,
     next_tool_id: &mut usize,
     message: &'a Message,
-) {
+    filter: TextFilter,
+) -> bool {
+    let mut rendered_any = false;
     for block in &message.content {
         match block {
             Block::Text { text } => {
-                let label = match message.role {
-                    Role::User => "user",
-                    Role::Assistant => "assistant",
+                let (include, label) = match message.role {
+                    Role::User if filter.user => (true, "user"),
+                    Role::Assistant if filter.assistant => (true, "assistant"),
+                    _ => (false, ""),
                 };
-                section(out, label, text);
+                if include {
+                    section(out, label, text);
+                    rendered_any = true;
+                }
             }
-            Block::Thinking { text, .. } => section(out, "thinking", text),
-            Block::ToolUse { id, tool } => {
+            Block::Thinking { text, .. } if filter.thinking => {
+                section(out, "thinking", text);
+                rendered_any = true;
+            }
+            Block::ToolUse { id, tool } if filter.tool_use => {
                 let short_id = short_tool_id(tool_ids, next_tool_id, id);
                 let (name, input) = tool.to_canonical();
                 // A tool invoked with no arguments — a bare slash command,
@@ -109,12 +171,13 @@ fn blocks<'a>(
                     input => input.to_string(),
                 };
                 section(out, &format!("tool {short_id} {}", one_line(&name)), &body);
+                rendered_any = true;
             }
             Block::ToolResult {
                 tool_use_id,
                 content,
                 is_error,
-            } => {
+            } if filter.tool_result => {
                 let short_id = short_tool_id(tool_ids, next_tool_id, tool_use_id);
                 let error = if *is_error { " error" } else { "" };
                 let label = format!("result {short_id}{error}");
@@ -122,14 +185,23 @@ fn blocks<'a>(
                     ToolOutput::Text(text) => section(out, &label, text),
                     ToolOutput::Json(value) => section(out, &label, &value.to_string()),
                 }
+                rendered_any = true;
             }
-            Block::Image { source } => section(
-                out,
-                &format!("image {} omitted", one_line(&source.media_type)),
-                "",
-            ),
+            Block::Image { source } if filter.includes_images() => {
+                section(
+                    out,
+                    &format!("image {} omitted", one_line(&source.media_type)),
+                    "",
+                );
+                rendered_any = true;
+            }
+            Block::Thinking { .. }
+            | Block::ToolUse { .. }
+            | Block::ToolResult { .. }
+            | Block::Image { .. } => {}
         }
     }
+    rendered_any
 }
 
 fn field(out: &mut String, name: &str, value: &str) {
@@ -373,5 +445,143 @@ mod tests {
         assert!(rendered.contains("[tool 1 Bash]"));
         assert!(rendered.contains("[result 1]\nok"));
         assert!(!rendered.contains("provider-a"));
+    }
+
+    fn representative_transcript() -> Transcript<Common> {
+        transcript(vec![
+            message(
+                Role::User,
+                vec![Block::Text {
+                    text: "line one\nline two".into(),
+                }],
+            ),
+            message(
+                Role::Assistant,
+                vec![
+                    Block::Thinking {
+                        text: "secret reasoning".into(),
+                        signature: None,
+                        encrypted: None,
+                    },
+                    Block::Text {
+                        text: "assistant\nexplanation".into(),
+                    },
+                    Block::ToolUse {
+                        id: "tool-1".into(),
+                        tool: Tool::Raw {
+                            tool_name: "Shell".into(),
+                            input: json!({"command": "echo hi"}),
+                        },
+                    },
+                ],
+            ),
+            message(
+                Role::User,
+                vec![Block::ToolResult {
+                    tool_use_id: "tool-1".into(),
+                    content: ToolOutput::Text("UNIQUE_TOOL_STDOUT".into()),
+                    is_error: false,
+                }],
+            ),
+            message(
+                Role::User,
+                vec![Block::Text {
+                    text: "follow up".into(),
+                }],
+            ),
+        ])
+    }
+
+    const HANDOFF: TextFilter = TextFilter {
+        user: true,
+        assistant: true,
+        thinking: false,
+        tool_use: true,
+        tool_result: false,
+    };
+
+    #[test]
+    fn unfiltered_output_matches_all_filter() {
+        let t = representative_transcript();
+        assert_eq!(to_text(&t), to_text_with_filter(&t, TextFilter::all()));
+        assert_eq!(
+            to_text_fragment(&t, &Span(0..4)),
+            to_text_fragment_with_filter(&t, &Span(0..4), TextFilter::all())
+        );
+    }
+
+    #[test]
+    fn handoff_filter_keeps_user_assistant_and_tool_use_verbatim() {
+        let rendered = to_text_with_filter(&representative_transcript(), HANDOFF);
+        assert!(rendered.contains("[user]\nline one\nline two"));
+        assert!(rendered.contains("[assistant]\nassistant\nexplanation"));
+        assert!(rendered.contains("[tool 1 Shell]\n{\"command\":\"echo hi\"}"));
+    }
+
+    #[test]
+    fn handoff_filter_drops_thinking_and_tool_results() {
+        let rendered = to_text_with_filter(&representative_transcript(), HANDOFF);
+        assert!(!rendered.contains("secret reasoning"));
+        assert!(!rendered.contains("UNIQUE_TOOL_STDOUT"));
+        assert!(!rendered.contains("[result"));
+    }
+
+    #[test]
+    fn tool_result_only_message_disappears_entirely() {
+        let rendered =
+            to_text_fragment_with_filter(&representative_transcript(), &Span(0..4), HANDOFF)
+                .unwrap();
+        assert!(!rendered.contains("UNIQUE_TOOL_STDOUT"));
+        assert!(
+            !rendered
+                .lines()
+                .any(|line| line.contains("UNIQUE_TOOL_STDOUT"))
+        );
+    }
+
+    #[test]
+    fn assistant_text_and_tool_use_stay_in_order() {
+        let rendered = to_text_with_filter(&representative_transcript(), HANDOFF);
+        let assistant = rendered
+            .find("[assistant]\nassistant")
+            .expect("assistant text");
+        let tool = rendered.find("[tool 1 Shell]").expect("tool use");
+        assert!(assistant < tool);
+    }
+
+    #[test]
+    fn fragment_range_resolves_before_filtering() {
+        let rendered =
+            to_text_fragment_with_filter(&representative_transcript(), &Span(2..3), HANDOFF)
+                .unwrap();
+        assert!(rendered.contains("fragment=#3"));
+        assert!(rendered.contains("of=4"));
+        assert!(!rendered.contains("── #1 ──"));
+        assert!(!rendered.contains("follow up"));
+        assert!(!rendered.contains("UNIQUE_TOOL_STDOUT"));
+    }
+
+    #[test]
+    fn selective_filter_omits_image_shells() {
+        let t = transcript(vec![message(
+            Role::Assistant,
+            vec![
+                Block::Text {
+                    text: "see this".into(),
+                },
+                Block::Image {
+                    source: ImageSource {
+                        source_type: "base64".into(),
+                        media_type: "image/png".into(),
+                        data: "payload".into(),
+                    },
+                },
+            ],
+        )]);
+        let all = to_text(&t);
+        assert!(all.contains("[image image/png omitted]"));
+        let filtered = to_text_with_filter(&t, HANDOFF);
+        assert!(filtered.contains("[assistant]\nsee this"));
+        assert!(!filtered.contains("[image"));
     }
 }
