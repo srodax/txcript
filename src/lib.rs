@@ -27,6 +27,7 @@ pub mod local;
 pub mod search;
 pub mod text;
 mod transcript;
+pub mod trim;
 
 #[cfg(feature = "wasm")]
 mod wasm;

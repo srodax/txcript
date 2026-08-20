@@ -133,6 +133,8 @@ txcript continue <file|->[#range]        # continue a Simple document instead:
 txcript view <id>[#range]                # print a session as compact text
     [--from <harness>]                    #   scope the id lookup to one harness
     [--include user,assistant,tool-use]   #   filter the text projection
+    [--drop-leading-setup]                #   drop AGENTS.md / env preamble
+    [--drop-trailing-handoff]             #   drop the save-ceremony tail
 ```
 
 `continue` writes the session where the target harness keeps its sessions, then launches that harness on it, handing over the terminal:
@@ -144,12 +146,16 @@ txcript view <id>[#range]                # print a session as compact text
 
 `view` prints the session as compact text, each message numbered by a `── #N ──` rule.
 
-`--include` filters the existing text projection to named block categories (`user`, `assistant`, `thinking`, `tool-use`, `tool-result`). Omit it for the full projection:
+`--include` filters the existing text projection to named block categories (`user`, `assistant`, `thinking`, `tool-use`, `tool-result`). Omit it for the full projection.
+
+`--drop-leading-setup` removes harness/repo environment that a new agent in the same repo will reload (`AGENTS.md`, plugin catalogs, `<environment_context>`, `<user_info>`). A Cursor blob that mixes that preamble with `<user_query>` keeps only the query. `--drop-trailing-handoff` cuts the save ceremony (`[$handoff]`, injected handoff `SKILL.md`, `txcript view` saves) so the file ends at the last real work turn. A leading `/handoff load` is kept.
 
 ```sh
 txcript view <session-id> \
   --from claude_code \
-  --include user,assistant,tool-use
+  --include user,assistant,tool-use \
+  --drop-leading-setup \
+  --drop-trailing-handoff
 ```
 
 `#range` selects messages by those printed ordinals, 1-based and inclusive:

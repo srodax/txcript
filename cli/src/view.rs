@@ -44,6 +44,8 @@ pub fn cmd_view(
     source: &str,
     from: Option<HarnessId>,
     include: &[ViewInclude],
+    drop_leading_setup: bool,
+    drop_trailing_handoff: bool,
 ) -> Result<ExitCode, String> {
     let sessions = super::discover_with_spinner();
     // A whole-input match (a title that itself contains `#12`) beats the
@@ -57,9 +59,15 @@ pub fn cmd_view(
         let scope = from.map_or(String::new(), |h| format!(" {h}"));
         format!("no local{scope} session matches `{src}` (try `txcript list`)")
     })?;
-    let common = session
+    let mut common = session
         .read()
         .map_err(|e| format!("reading session `{src}`: {e}"))?;
+    if drop_leading_setup {
+        common.body = txcript::trim::drop_leading_setup(&common.body);
+    }
+    if drop_trailing_handoff {
+        common.body = txcript::trim::drop_trailing_handoff(&common.body);
+    }
 
     let total = common.body.len();
     let span = match &request {
@@ -96,6 +104,10 @@ mod tests {
             from: Option<HarnessId>,
             #[arg(long, value_delimiter = ',', value_enum)]
             include: Vec<ViewInclude>,
+            #[arg(long)]
+            drop_leading_setup: bool,
+            #[arg(long)]
+            drop_trailing_handoff: bool,
         },
     }
 
@@ -114,6 +126,8 @@ mod tests {
                 source: "abc".into(),
                 from: None,
                 include: vec![ViewInclude::User],
+                drop_leading_setup: false,
+                drop_trailing_handoff: false,
             }
         );
     }
@@ -130,6 +144,8 @@ mod tests {
                     ViewInclude::Assistant,
                     ViewInclude::ToolUse,
                 ],
+                drop_leading_setup: false,
+                drop_trailing_handoff: false,
             }
         );
     }
@@ -153,6 +169,8 @@ mod tests {
                     ViewInclude::Assistant,
                     ViewInclude::ToolUse,
                 ],
+                drop_leading_setup: false,
+                drop_trailing_handoff: false,
             }
         );
     }
@@ -161,6 +179,25 @@ mod tests {
     fn rejects_unknown_include_category() {
         let argv = ["txcript", "view", "abc", "--include", "banana"];
         assert!(Cli::try_parse_from(argv).is_err());
+    }
+
+    #[test]
+    fn parses_handoff_trim_flags() {
+        assert_eq!(
+            parse(&[
+                "view",
+                "abc",
+                "--drop-leading-setup",
+                "--drop-trailing-handoff",
+            ]),
+            Command::View {
+                source: "abc".into(),
+                from: None,
+                include: vec![],
+                drop_leading_setup: true,
+                drop_trailing_handoff: true,
+            }
+        );
     }
 
     #[test]

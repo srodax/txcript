@@ -18,6 +18,8 @@
 //! txcript view <id>[#range]             # print a session as compact text
 //!     [--from <harness>]                    #   scope the id lookup to one harness
 //!     [--include user,assistant,tool-use]   #   filter the text projection
+//!     [--drop-leading-setup]                #   drop AGENTS.md / env preamble
+//!     [--drop-trailing-handoff]             #   drop the save-ceremony tail
 //! txcript query '<pattern>'             # one-shot search, print ranked hits
 //! txcript query                         # fzf-style picker; Enter continues
 //!     [--from <harness>]                    #   search only <harness> (default: all)
@@ -148,6 +150,12 @@ enum Command {
         /// Include only these block categories in the text projection
         #[arg(long, value_delimiter = ',', value_enum)]
         include: Vec<view::ViewInclude>,
+        /// Drop leading harness/repo setup (AGENTS.md, plugins, env, user_info)
+        #[arg(long)]
+        drop_leading_setup: bool,
+        /// Drop the trailing handoff-save ceremony
+        #[arg(long)]
+        drop_trailing_handoff: bool,
     },
     /// Search session content; without a pattern, open an fzf-style picker
     ///
@@ -237,7 +245,15 @@ async fn main() -> ExitCode {
             source,
             from,
             include,
-        } => view::cmd_view(&source, from, &include),
+            drop_leading_setup,
+            drop_trailing_handoff,
+        } => view::cmd_view(
+            &source,
+            from,
+            &include,
+            drop_leading_setup,
+            drop_trailing_handoff,
+        ),
         Command::Query {
             pattern,
             with,
